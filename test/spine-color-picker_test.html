@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>spine-color-picker test</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../../iron-test-helpers/mock-interactions.html">
+
+    <link rel="import" href="../spine-color-picker.html">
+</head>
+<body>
+
+<test-fixture id="main">
+    <template>
+        <spine-color-picker value="#abd8fc"></spine-color-picker>
+    </template>
+</test-fixture>
+
+<script>
+    suite('spine-color-picker', function () {
+        test('should instantiate the element', () => {
+            const element = fixture('main');
+            expect(element.constructor.is).to.eql('spine-color-picker');
+        });
+
+        test('should be rendered with a selected initial value', done => {
+            const element = fixture('main');
+
+            flush(() => {
+                const initialValue = '#abd8fc';
+                const selectedNode = element.$.content.querySelector(
+                    'spine-color-picker-item[selected]');
+                expect(selectedNode.bgColor).to.eql(initialValue);
+                done();
+            });
+        });
+
+        test('should select value', done => {
+            const element = fixture('main');
+
+            flush(() => {
+                const item = element.$.content.querySelector(
+                    'spine-color-picker-item:not([selected])');
+                MockInteractions.tap(element.$.trigger);
+                MockInteractions.tap(item);
+
+                expect(element.value).to.eql(item.bgColor);
+                done();
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

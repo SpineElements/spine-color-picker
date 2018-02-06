@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>spine-color-picker-item test</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../spine-color-picker-item.html">
+</head>
+<body>
+<test-fixture id="main">
+    <template>
+        <spine-color-picker-item bg-color="rgb(255, 0, 255)"></spine-color-picker-item>
+    </template>
+</test-fixture>
+
+<script>
+    suite('spine-color-picker-item', function () {
+        let element;
+
+        setup(() => {
+            element = fixture('main');
+        });
+
+        test('should instantiate the element', () => {
+            expect(element.constructor.is).to.eql('spine-color-picker-item');
+        });
+
+        test('should reflect `bgColor` property to the component styles', () => {
+            expect(element.style.background).to.eql(element.bgColor);
+        });
+
+        test('should dispatch a proper event upon `selected` property change', () => {
+            const spy = sinon.spy();
+            element.addEventListener('analyzer-color-item-select', spy);
+            element.selected = true;
+
+            expect(spy.called).to.eql(true);
+            element.removeEventListener('analyzer-color-item-select', spy);
+        });
+
+        test('should display the icon when `selected` property is true', () => {
+            element.selected = true;
+            const icon = element.shadowRoot.querySelector('iron-icon');
+            expect(window.getComputedStyle(icon).visibility).to.eql('visible');
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{
+  "name": "spine-color-picker",
+  "description": "An element that holds the color set and provides selection between them.",
+  "main": "spine-color-picker.html",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/SpineElements/spine-color-picker",
+  "keywords": [
+    "web-components",
+    "web-component",
+    "polymer",
+    "spine",
+    "color",
+    "picker"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^2.0.0",
+    "iron-icon": "^2.0.1",
+    "iron-a11y-keys-behavior": "^2.0.1",
+    "paper-menu-button": "^2.0.0"
+  },
+  "devDependencies": {
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
+    "iron-test-helpers": "^2.0.0"
+  },
+  "resolutions": {
+    "polymer": "^2.0.0"
+  }
+}
