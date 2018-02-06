@@ -1,6 +1,5 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
-<link rel="import" href="../spine-theme-detector-mixin.html">
 
 <!--
  An interactive list item to display one specific color.
@@ -50,15 +49,7 @@
     </template>
 
     <script>
-        SpineElements = {
-            AnalyzerThemeDetectorMixin: parent => parent
-        };
-        /**
-         * @extends {Polymer.Element}
-         * @appliesMixin AnalyzerThemeDetectorMixin
-         */
-        class SpineColorPickerItem extends
-            SpineElements.AnalyzerThemeDetectorMixin(Polymer.Element) {
+        class SpineColorPickerItem extends Polymer.Element {
 
             static get is() {
                 return 'spine-color-picker-item';
