@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../paper-styles/default-theme.html">
 
 <!--
  An interactive list item to display one specific color.
@@ -10,19 +11,19 @@
             :host {
                 display: inline-block;
                 box-sizing: border-box;
-                width: var(--analyzer-heatmap-color-picker-item-size, 24px);
-                height: var(--analyzer-heatmap-color-picker-item-size, 24px);
-                margin-right: var(--analyzer-heatmap-color-picker-space-between, 1px);
-                margin-bottom: var(--analyzer-heatmap-color-picker-space-between, 1px);
+                width: var(--spine-heatmap-color-picker-item-size, 24px);
+                height: var(--spine-heatmap-color-picker-item-size, 24px);
+                margin-right: var(--spine-heatmap-color-picker-space-between, 1px);
+                margin-bottom: var(--spine-heatmap-color-picker-space-between, 1px);
                 cursor: pointer;
-                transition: ease all var(--animation-duration-max);
+                transition: ease all .2s;
                 text-align: center;
-                line-height: var(--analyzer-heatmap-color-picker-item-size, 24px);
+                line-height: var(--spine-heatmap-color-picker-item-size, 24px);
                 border: 1px solid rgba(0, 0, 0, .08);
             }
 
             :host([active]) {
-                border-radius: calc(var(--analyzer-heatmap-color-picker-item-size, 24px) / 2);
+                border-radius: calc(var(--spine-heatmap-color-picker-item-size, 24px) / 2);
             }
 
             :host([selected]) iron-icon {
@@ -34,11 +35,11 @@
             }
 
             :host([light-theme]) iron-icon {
-                color: var(--light-theme-primary-color);
+                color: var(--light-theme-text-color);
             }
 
             iron-icon {
-                height: calc(var(--analyzer-heatmap-color-picker-item-size, 24px) - 6px);
+                height: calc(var(--spine-heatmap-color-picker-item-size, 24px) - 6px);
                 top: -1px;
                 left: -1px;
                 visibility: hidden;
@@ -50,7 +51,6 @@
 
     <script>
         class SpineColorPickerItem extends Polymer.Element {
-
             static get is() {
                 return 'spine-color-picker-item';
             }
@@ -60,7 +60,7 @@
                 /**
                  * Fired when `selected` property becomes true.
                  *
-                 * @event analyzer-color-item-select
+                 * @event spine-color-item-select
                  * @param {string} value Selected color
                  */
                 return {
@@ -73,7 +73,7 @@
                     },
 
                     /**
-                     * If true, the `analyzer-color-item-select` event is fired.
+                     * If true, the `spine-color-item-select` event is fired.
                      */
                     selected: {
                         type: Boolean,
@@ -96,7 +96,7 @@
             }
 
             _createItemSelectedEvent() {
-                return new CustomEvent('analyzer-color-item-select', {
+                return new CustomEvent('spine-color-item-select', {
                     detail: {value: this.bgColor},
                     bubbles: true,
                     composed: true

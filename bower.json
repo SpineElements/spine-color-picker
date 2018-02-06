@@ -21,7 +21,8 @@
     "polymer": "Polymer/polymer#^2.0.0",
     "iron-icon": "^2.0.1",
     "iron-a11y-keys-behavior": "^2.0.1",
-    "paper-menu-button": "^2.0.0"
+    "paper-menu-button": "^2.0.0",
+    "paper-styles": "^2.0.0"
   },
   "devDependencies": {
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
