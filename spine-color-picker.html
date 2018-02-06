@@ -1,72 +1,35 @@
 <link rel="import" href="../polymer/polymer-element.html">
-<link rel="import" href="../iron-a11y-keys-behavior/iron-a11y-keys-behavior.html">
-<link rel="import" href="../paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
 
-<link rel="import" href="./spine-color-picker-item.html">
+<link rel="import" href="./spine-color-picker-light.html">
 
 <!--
  An element to hold the passed color set and to provide selection between them.
  Behaves as a simple icon button with a popup content.
+
+ Example:
+ ```
+    <spine-color-picker value="{{selectedColor}}"></spine-color-picker>
+ ```
 -->
 <dom-module id="spine-color-picker">
     <template>
         <style>
             :host {
-                flex: 0;
-                text-align: center;
-            }
-
-            #content {
-                overflow: hidden;
-                outline: none;
-            }
-
-            #content > div {
-                font-size: 0;
-                line-height: 0;
-                margin-right: calc(-1 * var(--spine-color-picker-space-between, 1px));
-                margin-bottom: calc(-1 * var(--spine-color-picker-space-between, 1px));
-                overflow: hidden;
-                border-radius: 4px;
-                padding: var(--indent-mini);
-                background: #fff;
-            }
-
-            paper-menu-button {
-                padding: 4px;
+                display: inline-block;
             }
         </style>
 
-        <paper-menu-button id="menu"
-                           close-animation-config="[[_closeAnimationConfig]]"
-                           on-iron-overlay-opened="_handlePopupOpened"
-                           on-iron-overlay-closed="_handlePopupClosed"
-                           no-overlap>
-            <slot id="trigger" name="picker-trigger" slot="dropdown-trigger"></slot>
-
-            <div slot="dropdown-content"
-                 style$="width:[[_width]];height:[[_height]]"
-                 id="content"
-                 on-mouseleave="_handleMouseLeave"
-                 tabIndex="0">
-                <div>
-                    <template is="dom-repeat" items="[[_colorValues()]]">
-                        <spine-color-picker-item class="item"
-                                                 bg-color="[[item]]"
-                                                 index="[[index]]"
-                                                 on-mouseover="_handleMouseNavigation"
-                                                 on-click="_handleMouseClick">
-                        </spine-color-picker-item>
-                    </template>
-                </div>
-            </div>
-        </paper-menu-button>
+        <spine-color-picker-light value="{{value}}" colors="[[colors]]">
+            <paper-icon-button disabled="[[disabled]]"
+                               icon="editor:format-color-fill"
+                               slot="dropdown-trigger">
+            </paper-icon-button>
+        </spine-color-picker-light>
     </template>
 
     <script>
-        class AnalyzerColorPicker extends
-            Polymer.mixinBehaviors(Polymer.IronA11yKeysBehavior, Polymer.Element) {
-
+        class SpineColorPicker extends Polymer.Element {
             static get is() {
                 return 'spine-color-picker';
             }
@@ -83,243 +46,12 @@
 
                     /**
                      * The colors set to display as the popup content.
-                     * At the render step each color array is transferred to a vertical column.
                      */
-                    colors: {
-                        type: Object,
-                        value: {
-                            gray: ["#455a64", "#546e7a", "#90a4ae", "#cfd8dc", "#ffffff"],
-                            red: ["#e53935", "#f44336", "#ef5350", "#e57373", "#ef9a9a"],
-                            orange: ["#E65100", "#FF6B1A", "#FF8433", "#FF9E4D", "#FFB766"],
-                            amber: ["#ff8400", "#FF9E1A", "#FFB733", "#FFD14D", "#FFEA66"],
-                            green: ["#1b5e20", "#2e7d32", "#43a047", "#81c784", "#a5d6a7"],
-                            cyan: ["#b4baf2", "#adcef9", "#abd8fc", "#ceeeff", "#ddf4ff"],
-                            blue: ["#0070B8", "#0089d1", "#1AA3EB", "#33BCFF", "#4DD6FF"],
-                            purple: ["#4527a0", "#512da8", "#5e35b1", "#9575cd", "#d1c4e9"]
-                        }
-                    },
-
-                    _activeItem: {
-                        type: Object
-                    },
-
-                    _width: {
-                        type: String
-                    },
-
-                    _height: {
-                        type: String
-                    },
-
-                    _closeAnimationConfig: {
-                        type: Object,
-                        value: function () {
-                            return [];
-                        }
-                    },
-
-                    _navigationIndex: {
-                        type: Number,
-                        value: 0
-                    },
-
-                    _dropdownItems: {
-                        type: Object
-                    }
-                }
-            }
-
-            get keyBindings() {
-                return {
-                    'left': '_handleKeyboardNavigation',
-                    'right': '_handleKeyboardNavigation',
-                    'down': '_handleKeyboardNavigation',
-                    'up': '_handleKeyboardNavigation',
-                    'end': '_handleKeyboardNavigation',
-                    'home': '_handleKeyboardNavigation',
-                    'end+ctrl': '_handleKeyboardNavigation',
-                    'home+ctrl': '_handleKeyboardNavigation',
-                    'enter': '_handleEnterKeyDown'
-                }
-            }
-
-            get _activeNode() {
-                return typeof this._navigationIndex === 'number'
-                    ? this._dropdownItems[this._navigationIndex]
-                    : null;
-            }
-
-            constructor() {
-                super();
-                Polymer.RenderStatus.beforeNextRender(this, function () {
-                    this._computePopupProperties();
-                    this._getInitiallyActiveItem();
-                }, null);
-            }
-
-            _handlePopupOpened() {
-                this.$.content.focus();
-            }
-
-            _handlePopupClosed() {
-                this._updateActiveItem(this._activeItem.index);
-            }
-
-            _handleMouseClick(event) {
-                this._handleMouseNavigation(event);
-                this._handleItemSelection();
-                this.$.menu.close();
-            }
-
-            _handleEnterKeyDown() {
-                if (typeof this._navigationIndex !== 'number') {
-                    this._updateActiveItem(this._activeItem.index);
-
-                } else {
-                    this._handleItemSelection();
-                    this.$.menu.close();
-                }
-            }
-
-            _handleMouseNavigation(event) {
-                if (typeof event.target.index === 'number') {
-                    this._updateActiveItem(event.target.index);
-                }
-            }
-
-            _handleMouseLeave() {
-                if (typeof this._navigationIndex === 'number') {
-                    this._activeNode.active = false;
-                    this._navigationIndex = null;
-                }
-            }
-
-            _handleKeyboardNavigation(event) {
-                const nextIndex = this._getIndexChangeByKey(event.detail.combo);
-                this._updateActiveItem(nextIndex);
-            }
-
-            _colorValues() {
-                const values = [];
-                const keys = Object.keys(this.colors);
-                for (let i = 0; i < this.colors[keys[0]].length; i++) {
-                    for (let j = 0; j < keys.length; j++) {
-                        values.push(this.colors[keys[j]][i]);
-                    }
-                }
-                return values;
-            }
-
-            _computePopupProperties() {
-                const itemSize = this._getItemSize();
-
-                if (itemSize) {
-                    const actualWidth = itemSize.width + itemSize.spaceBetween;
-
-                    const colorKeys = Object.keys(this.colors);
-                    const width = (colorKeys.length * actualWidth) -
-                        itemSize.spaceBetween + (itemSize.parentPadding * 2);
-                    const height = (this.colors[colorKeys[0]].length * actualWidth) -
-                        itemSize.spaceBetween + (itemSize.parentPadding * 2);
-
-                    this._width = width + "px";
-                    this._height = height + "px";
-                }
-            }
-
-            _getItemSize() {
-                const item = this.shadowRoot.querySelector('.item');
-                const parentPadding = window.getComputedStyle(item.parentElement)['padding-left'];
-
-                if (item) {
-                    const computed = window.getComputedStyle(item);
-                    return {
-                        width: Number.parseInt(computed.width),
-                        spaceBetween: Number.parseInt(computed['margin-right']),
-                        parentPadding: Number.parseInt(parentPadding)
-                    }
-                }
-
-                return null;
-            }
-
-            _handleItemSelection() {
-                if (typeof this._navigationIndex === 'number' &&
-                    this._activeNode.bgColor !== this.value) {
-
-                    const target = this._activeNode;
-                    const color = target.bgColor;
-
-                    if (color && color !== this.value) {
-                        this.value = color;
-
-                        if (this._activeItem) {
-                            this._activeItem.selected = false;
-                        }
-
-                        target.selected = true;
-                        this._activeItem = target;
-                    }
-                }
-            }
-
-            _getInitiallyActiveItem() {
-                const items = this.$.content.querySelectorAll('spine-color-picker-item');
-                this._dropdownItems = items;
-
-                for (let i = 0; i < items.length; i++) {
-                    const item = items[i];
-                    if (item.bgColor === this.value) {
-                        this._navigationIndex = i;
-                        item.active = true;
-                        item.selected = true;
-                        this._activeItem = item;
-                        return;
-                    }
-                }
-            }
-
-            _updateActiveItem(nextItemIndex) {
-                if (typeof this._navigationIndex === 'number') {
-                    this._activeNode.active = false;
-                }
-                this._dropdownItems[nextItemIndex].active = true;
-                this._navigationIndex = nextItemIndex;
-            }
-
-            _getIndexChangeByKey(combo) {
-                const rowStep = Object.keys(this.colors).length;
-                const max = this._dropdownItems.length - 1;
-                const rowMax = rowStep - 1;
-
-                let index = typeof this._navigationIndex === 'number'
-                    ? this._navigationIndex
-                    : this._activeItem.index;
-
-                let rowIndex = index <= rowMax ? index : index % rowStep;
-                switch (combo.toLowerCase()) {
-                    case 'left':
-                        return --rowIndex < 0 ? index + rowMax : --index;
-                    case 'right':
-                        return ++rowIndex > rowMax ? index - rowMax : ++index;
-                    case 'down':
-                        index += rowStep;
-                        return index > max ? index - max - 1 : index;
-                    case 'up':
-                        index -= rowStep;
-                        return index < 0 ? max + index + 1 : index;
-                    case 'home':
-                        return index - rowIndex;
-                    case 'end':
-                        return index + rowMax - rowIndex;
-                    case 'home+ctrl':
-                        return 0;
-                    case 'end+ctrl':
-                        return max;
-                }
+                    colors: Object
+                };
             }
         }
 
-        window.customElements.define(AnalyzerColorPicker.is, AnalyzerColorPicker);
+        window.customElements.define(SpineColorPicker.is, SpineColorPicker);
     </script>
 </dom-module>
