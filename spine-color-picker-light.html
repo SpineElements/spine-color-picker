@@ -78,9 +78,9 @@
         </paper-menu-button>
     </template>
 
-    <script>
-        class SpineColorPicker extends
-            Polymer.mixinBehaviors(Polymer.IronA11yKeysBehavior, Polymer.Element) {
+    <script>{
+        class SpineColorPickerLight extends Polymer.mixinBehaviors(Polymer.IronA11yKeysBehavior,
+            Polymer.Element) {
 
             static get is() {
                 return 'spine-color-picker-light';
@@ -335,6 +335,6 @@
             }
         }
 
-        window.customElements.define(SpineColorPicker.is, SpineColorPicker);
-    </script>
+        window.customElements.define(SpineColorPickerLight.is, SpineColorPickerLight);
+    }</script>
 </dom-module>

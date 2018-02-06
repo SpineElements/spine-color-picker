@@ -49,7 +49,7 @@
         <iron-icon icon="icons:check"></iron-icon>
     </template>
 
-    <script>
+    <script>{
         class SpineColorPickerItem extends Polymer.Element {
             static get is() {
                 return 'spine-color-picker-item';
@@ -78,7 +78,7 @@
                     selected: {
                         type: Boolean,
                         reflectToAttribute: true,
-                        observer: '_selectedObserver'
+                        observer: '__selectedObserver'
                     },
 
                     reflectToStyle: {
@@ -89,13 +89,13 @@
                 }
             }
 
-            _selectedObserver(value) {
+            __selectedObserver(value) {
                 if (value) {
-                    this.dispatchEvent(this._createItemSelectedEvent());
+                    this.dispatchEvent(this.__createItemSelectedEvent());
                 }
             }
 
-            _createItemSelectedEvent() {
+            __createItemSelectedEvent() {
                 return new CustomEvent('spine-color-item-select', {
                     detail: {value: this.bgColor},
                     bubbles: true,
@@ -106,5 +106,5 @@
         }
 
         window.customElements.define(SpineColorPickerItem.is, SpineColorPickerItem);
-    </script>
+    }</script>
 </dom-module>
