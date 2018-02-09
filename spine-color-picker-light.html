@@ -279,9 +279,9 @@
                 for (let i = 0; i < items.length; i++) {
                     const item = items[i];
                     if (item.bgColor === this.value) {
-                        this._navigationIndex = i;
                         item.active = true;
                         item.selected = true;
+                        this._navigationIndex = i;
                         this._activeItem = item;
                         return;
                     }

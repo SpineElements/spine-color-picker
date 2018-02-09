@@ -18,35 +18,41 @@
 
 <test-fixture id="main">
     <template>
-        <spine-color-picker-light value="#abd8fc"></spine-color-picker-light>
+        <spine-color-picker-light value="#FFB733">
+            <button>Trigger</button>
+        </spine-color-picker-light>
     </template>
 </test-fixture>
 
 <script>
     suite('spine-color-picker', function () {
+        const selectors = {
+            selectedItem: 'spine-color-picker-item[selected]',
+            activeItem: 'spine-color-picker-item[active]',
+            notSelectedItem: 'spine-color-picker-item:not([selected])'
+        };
+        const initialValue = '#FFB733';
+        let element;
+
+        setup(() => {
+            element = fixture('main');
+        });
+
         test('should instantiate the element', () => {
-            const element = fixture('main');
-            expect(element.constructor.is).to.eql('spine-color-picker');
+            expect(element.constructor.is).to.eql('spine-color-picker-light');
         });
 
         test('should be rendered with a selected initial value', done => {
-            const element = fixture('main');
-
             flush(() => {
-                const initialValue = '#abd8fc';
-                const selectedNode = element.$.content.querySelector(
-                    'spine-color-picker-item[selected]');
+                const selectedNode = element.$.content.querySelector(selectors.selectedItem);
                 expect(selectedNode.bgColor).to.eql(initialValue);
                 done();
             });
         });
 
-        test('should select value', done => {
-            const element = fixture('main');
-
+        test('should select a value', done => {
             flush(() => {
-                const item = element.$.content.querySelector(
-                    'spine-color-picker-item:not([selected])');
+                const item = element.$.content.querySelector(selectors.notSelectedItem);
                 MockInteractions.tap(element.$.trigger);
                 MockInteractions.tap(item);
 
@@ -54,6 +60,66 @@
                 done();
             });
         });
+
+        test('should dispatch a proper event when a value is selected', done => {
+            flush(() => {
+                const spy = sinon.spy();
+                const item = element.$.content.querySelector(selectors.notSelectedItem);
+                item.addEventListener('spine-color-picker-item-select', spy);
+                MockInteractions.tap(element.$.trigger);
+                MockInteractions.tap(item);
+
+                expect(spy.calledWithMatch({detail: {value: item.bgColor}}));
+                done();
+            });
+        });
+
+        test('should provide a proper navigation when `right` key is pressed', done => {
+            testKeyboardNavigation('right', index => index + 1, done);
+        });
+
+        test('should provide a proper navigation when `left` key is pressed', done => {
+            testKeyboardNavigation('left', index => index - 1, done);
+        });
+
+        test('should provide a proper navigation when `down` key is pressed', done => {
+            const rowLength = element.colors[0].length;
+            testKeyboardNavigation('down', index => index + rowLength, done);
+        });
+
+        test('should provide a proper navigation when `up` key is pressed', done => {
+            const rowLength = element.colors[0].length;
+                testKeyboardNavigation('up', index => index - rowLength, done);
+        });
+
+        test('should provide a proper navigation when `end` key is pressed', done => {
+            testKeyboardNavigation('end', index => index + 4, done);
+        });
+
+        test('should provide a proper navigation when `home` key is pressed', done => {
+            testKeyboardNavigation('home', index => index -3, done);
+        });
+
+        test('should provide a proper navigation when `ctrl+end` key is pressed', done => {
+            const maxIndex = element.colors.length * element.colors[0].length - 1;
+            testKeyboardNavigation('end', index => maxIndex, done, 'ctrl');
+        });
+
+        test('should provide a proper navigation when `ctrl+home` key is pressed', done => {
+            testKeyboardNavigation('home', index => 0, done, 'ctrl');
+        });
+
+        function testKeyboardNavigation(key, indexShiftCallback, done, keyModifier) {
+            flush(() => {
+                const currentIndex = element.$.content.querySelector(selectors.activeItem).index;
+                MockInteractions.keyDownOn(element, null, keyModifier, key);
+
+                const expectedNextIndex = indexShiftCallback(currentIndex);
+                const nextIndex = element.$.content.querySelector(selectors.activeItem).index;
+                expect(nextIndex).to.eql(expectedNextIndex);
+                done();
+            });
+        }
     });
 </script>
 
