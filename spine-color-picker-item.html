@@ -12,38 +12,50 @@
             :host {
                 display: inline-block;
                 box-sizing: border-box;
-                width: var(--spine-heatmap-color-picker-item-size, 24px);
-                height: var(--spine-heatmap-color-picker-item-size, 24px);
-                margin-right: var(--spine-heatmap-color-picker-space-between, 1px);
-                margin-bottom: var(--spine-heatmap-color-picker-space-between, 1px);
+                width: var(--spine-color-picker-item-size, 24px);
+                height: var(--spine-color-picker-item-size, 24px);
+                margin-right: var(--spine-color-picker-space-between, 1px);
+                margin-bottom: var(--spine-color-picker-space-between, 1px);
                 cursor: pointer;
                 transition: ease all .2s;
                 text-align: center;
-                line-height: var(--spine-heatmap-color-picker-item-size, 24px);
+                line-height: var(--spine-color-picker-item-size, 24px);
                 border: 1px solid rgba(0, 0, 0, .08);
+
+                @apply --spine-color-picker-item;
             }
 
             :host([active]) {
-                border-radius: calc(var(--spine-heatmap-color-picker-item-size, 24px) / 2);
+                border-radius: calc(var(--spine-color-picker-item-size, 24px) / 2);
+
+                @apply --spine-color-picker-item-active;
             }
 
             :host([selected]) iron-icon {
                 visibility: visible;
+
+                @apply --spine-color-picker-item-selected;
             }
 
             :host([dark-theme]) iron-icon {
                 color: var(--dark-theme-text-color);
+
+                @apply --spine-color-picker-item-dark;
             }
 
             :host([light-theme]) iron-icon {
                 color: var(--light-theme-text-color);
+
+                @apply --spine-color-picker-item-light;
             }
 
             iron-icon {
-                height: calc(var(--spine-heatmap-color-picker-item-size, 24px) - 6px);
+                height: calc(var(--spine-color-picker-item-size, 24px) - 6px);
                 top: -1px;
                 left: -1px;
                 visibility: hidden;
+
+                @apply --spine-color-picker-item-icon;
             }
         </style>
 

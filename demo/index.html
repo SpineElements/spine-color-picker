@@ -1,8 +1,9 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+    <meta name="viewport"
+          content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
     <title>spine-color-picker demo</title>
 
@@ -12,20 +13,67 @@
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
     <link rel="import" href="../../neon-animation/web-animations.html">
     <link rel="import" href="../spine-color-picker.html">
+    <link rel="import" href="../spine-color-picker-light.html">
 
     <custom-style>
-      <style is="custom-style" include="demo-pages-shared-styles">
-      </style>
+        <style is="custom-style" include="demo-pages-shared-styles">
+        </style>
     </custom-style>
-  </head>
-  <body>
-    <div class="vertical-section-container centered">
-      <h3>Basic example</h3>
-      <demo-snippet class="centered-demo">
+</head>
+<body>
+<div class="vertical-section-container centered">
+    <h3>Default Material design colors</h3>
+    <demo-snippet class="centered-demo">
         <template>
-          <spine-color-picker></spine-color-picker>
+            <spine-color-picker></spine-color-picker>
         </template>
-      </demo-snippet>
-    </div>
-  </body>
+    </demo-snippet>
+
+    <h3>Custom colors</h3>
+    <demo-snippet class="centered-demo">
+        <template>
+            <spine-color-picker id="custom-colors"></spine-color-picker>
+            <script>
+                const colorPicker = document.body.querySelector('#custom-colors');
+                const colors = [
+                    ['#ffffff', '#888888', '#000000'],
+                    ['#ff0000', '#aa0000', '#880000'],
+                    ['#00ff00', '#00aa00', '#008800']
+                ];
+                colorPicker.colors = colors;
+                colorPicker.value = colors[0][0];
+            </script>
+        </template>
+    </demo-snippet>
+
+    <h3>Custom trigger</h3>
+    <demo-snippet class="centered-demo">
+        <template>
+            <dom-bind id="autobind"><template>
+                <spine-color-picker-light value="{{value}}">
+                    <button style="background: [[value]]">TRIGGER</button>
+                </spine-color-picker-light>
+            </template></dom-bind>
+
+            <script>
+                const autobind = document.body.querySelector('#autobind');
+                autobind.value = '#ffffff';
+            </script>
+        </template>
+    </demo-snippet>
+
+    <h3>Styling example</h3>
+    <demo-snippet class="centered-demo">
+        <template>
+            <spine-color-picker id="giant"></spine-color-picker>
+            <style is="custom-styles">
+                spine-color-picker#giant {
+                    --spine-color-picker-space-between: 10px;
+                    --spine-color-picker-item-size: 40px;
+                }
+            </style>
+        </template>
+    </demo-snippet>
+</div>
+</body>
 </html>
