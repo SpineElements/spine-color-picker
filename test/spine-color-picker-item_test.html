@@ -37,11 +37,11 @@
 
         test('should dispatch a proper event upon `selected` property change', () => {
             const spy = sinon.spy();
-            element.addEventListener('analyzer-color-item-select', spy);
+            element.addEventListener('spine-color-picker-select', spy);
             element.selected = true;
 
             expect(spy.called).to.eql(true);
-            element.removeEventListener('analyzer-color-item-select', spy);
+            element.removeEventListener('spine-color-picker-select', spy);
         });
 
         test('should display the icon when `selected` property is true', () => {

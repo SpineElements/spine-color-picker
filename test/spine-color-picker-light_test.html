@@ -65,7 +65,7 @@
             flush(() => {
                 const spy = sinon.spy();
                 const item = element.$.content.querySelector(selectors.notSelectedItem);
-                item.addEventListener('spine-color-picker-item-select', spy);
+                item.addEventListener('spine-color-picker-select', spy);
                 MockInteractions.tap(element.$.trigger);
                 MockInteractions.tap(item);
 

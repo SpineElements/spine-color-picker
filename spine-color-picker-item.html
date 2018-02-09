@@ -73,7 +73,7 @@
                 /**
                  * Fired when `selected` property becomes true.
                  *
-                 * @event spine-color-item-select
+                 * @event spine-color-picker-select
                  * @param {string} value Selected color
                  */
                 return {
@@ -86,7 +86,7 @@
                     },
 
                     /**
-                     * If true, the `spine-color-item-select` event is fired.
+                     * If true, the `spine-color-picker-select` event is fired.
                      */
                     selected: {
                         type: Boolean,
@@ -109,7 +109,7 @@
             }
 
             __createItemSelectedEvent() {
-                return new CustomEvent('spine-color-picker-item-select', {
+                return new CustomEvent('spine-color-picker-select', {
                     detail: {value: this.bgColor},
                     bubbles: true,
                     composed: true
