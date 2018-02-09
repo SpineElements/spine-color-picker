@@ -20,7 +20,16 @@
 
  Custom property | Description | Default
  ----------------|-------------|----------
- `` |  |
+ `--spine-color-picker` | Mixin applied to the color picker | {}
+ `--spine-color-picker-content` | Mixin applied to the color picker content | {}
+ `--spine-color-picker-item` | Mixin applied to the color item | {}
+ `--spine-color-picker-item-active` | Mixin applied to the color when it's activated by a pointing device or the keyboard | {}
+ `--spine-color-picker-item-selected` | Mixin applied to the selected color item | {}
+ `--spine-color-picker-item-dark` | Mixin applied to the color item when its background is dark | {}
+ `--spine-color-picker-item-light` | Mixin applied to the color item when its background is light | {}
+ `--spine-color-picker-item-icon` | Mixin applied to the color item icon | {}
+ `--spine-color-picker-item-size` | The size of the color item | `24px`
+ `--spine-color-picker-space-between` | The space between color items | `1px`
 -->
 <dom-module id="spine-color-picker-light">
     <template>
@@ -100,6 +109,12 @@
                 return 'spine-color-picker-light';
             }
 
+            /**
+             * Fired when color item is selected.
+             *
+             * @event spine-color-picker-select
+             * @param {string} value Selected color
+             */
             static get properties() {
                 return {
                     /**

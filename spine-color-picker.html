@@ -5,19 +5,33 @@
 <link rel="import" href="./spine-color-picker-light.html">
 
 <!--
- An element to hold the passed color set and to provide selection between them.
+ An element to hold the color set and to provide selection between them.
  Behaves as a simple icon button with a popup content.
 
  Example:
  ```
     <spine-color-picker value="{{selectedColor}}"></spine-color-picker>
  ```
+
+ ###Styling
+
+ See `SpineColorPickerLight` for a full list of custom properties used to style this element.
+
+ The following custom properties and mixins are available for styling:
+
+ Custom property | Description | Default
+ ----------------|-------------|----------
+ `--spine-color-picker-trigger` | Mixin applied to the dropdown trigger | {}
 -->
 <dom-module id="spine-color-picker">
     <template>
         <style>
             :host {
                 display: inline-block;
+            }
+
+            paper-icon-button {
+                @apply --spine-color-picker-trigger;
             }
         </style>
 
@@ -46,6 +60,7 @@
 
                     /**
                      * The colors set to display as the popup content.
+                     * The Material colors is used as a default value.
                      */
                     colors: Object
                 };
