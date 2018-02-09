@@ -247,10 +247,10 @@
                     const rows = this.colors.length;
                     const columns = this.colors[0].length;
 
-                    const width = (columns * actualSize) -
-                        itemSize.spaceBetween + (itemSize.parentPadding * 2);
-                    const height = (rows * actualSize) -
-                        itemSize.spaceBetween + (itemSize.parentPadding * 2);
+                    const width = (columns * actualSize) +
+                        itemSize.parentPadding.horizontal - itemSize.spaceBetween;
+                    const height = (rows * actualSize) +
+                        itemSize.parentPadding.vertical - itemSize.spaceBetween;
 
                     this._width = width + "px";
                     this._height = height + "px";
@@ -259,14 +259,21 @@
 
             _getItemSize() {
                 const item = this.shadowRoot.querySelector('.item');
-                const parentPadding = window.getComputedStyle(item.parentElement)['padding-left'];
+                const parentComputedStyles = window.getComputedStyle(item.parentElement);
+                const leftPadding = Number.parseInt(parentComputedStyles['padding-left']);
+                const rightPadding = Number.parseInt(parentComputedStyles['padding-right']);
+                const topPadding = Number.parseInt(parentComputedStyles['padding-top']);
+                const bottomPadding = Number.parseInt(parentComputedStyles['padding-bottom']);
 
                 if (item) {
                     const computed = window.getComputedStyle(item);
                     return {
                         width: Number.parseInt(computed.width),
                         spaceBetween: Number.parseInt(computed['margin-right']),
-                        parentPadding: Number.parseInt(parentPadding)
+                        parentPadding: {
+                            horizontal: leftPadding + rightPadding,
+                            vertical: topPadding + bottomPadding
+                        }
                     }
                 }
 
