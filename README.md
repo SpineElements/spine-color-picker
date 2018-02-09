@@ -1,21 +1,18 @@
 # \<spine-color-picker\>
+ An element to hold the color set and to provide selection between them.
+ Behaves as a simple icon button with a drop down content.
 
-An element that holds the color set and provides selection between them.
+ Example:
+ ```
+    <spine-color-picker value="{{selectedColor}}"></spine-color-picker>
+ ```
 
-## Install the Polymer-CLI
+ ###Styling
 
-First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your element locally.
+ See `SpineColorPickerLight` for a full list of custom properties used to style this element.
 
-## Viewing Your Element
+ The following custom properties and mixins are available for styling:
 
-```
-$ polymer serve
-```
-
-## Running Tests
-
-```
-$ polymer test
-```
-
-Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
+ Custom property | Description | Default
+ ----------------|-------------|----------
+ `--spine-color-picker-trigger` | Mixin applied to the dropdown trigger | {}
