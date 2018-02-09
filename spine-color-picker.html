@@ -49,6 +49,13 @@
             }
 
             static get properties() {
+                /**
+                 * Fired when color item is selected.
+                 *
+                 * @event spine-color-picker-select
+                 * @param {string} value Selected color
+                 */
+
                 return {
                     /**
                      * The selected value.
@@ -59,8 +66,9 @@
                     },
 
                     /**
-                     * The colors set to display as the popup content.
-                     * The Material colors is used as a default value.
+                     * The colors set to display as the popup content. The Material colors is used
+                     * as a default value. Expected type is a two dimensional array of CSS hex or
+                     * rgb colors. Each array represents one displayed row.
                      */
                     colors: Object
                 };
