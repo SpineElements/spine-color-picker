@@ -65,13 +65,16 @@
                  on-mouseleave="_handleMouseLeave"
                  tabIndex="0">
                 <div>
-                    <template is="dom-repeat" items="[[_colorValues()]]">
-                        <spine-color-picker-item class="item"
-                                                 bg-color="[[item]]"
-                                                 index="[[index]]"
-                                                 on-mouseover="_handleMouseNavigation"
-                                                 on-click="_handleMouseClick">
-                        </spine-color-picker-item>
+                    <template is="dom-repeat" items="[[colors]]" index-as="rowIndex" as="row">
+                        <template is="dom-repeat" items="[[item]]" as="color" index-as="columnIndex">
+                            <spine-color-picker-item class="item"
+                                                     style$="background: [[color]]"
+                                                     bg-color="[[color]]"
+                                                     index="[[_getLinearIndex(row, rowIndex, columnIndex)]]"
+                                                     on-mouseover="_handleMouseNavigation"
+                                                     on-click="_handleMouseClick">
+                            </spine-color-picker-item>
+                        </template>
                     </template>
                 </div>
             </div>
@@ -79,6 +82,14 @@
     </template>
 
     <script>{
+        const DEFAULT_COLORS = [
+            ["#455a64", "#e53935", "#E65100", "#ff8400", "#1b5e20", "#b4baf2", "#0070B8", "#4527a0"],
+            ["#546e7a", "#f44336", "#FF6B1A", "#FF9E1A", "#2e7d32", "#adcef9", "#0089d1", "#512da8"],
+            ["#90a4ae", "#ef5350", "#FF8433", "#FFB733", "#43a047", "#abd8fc", "#1AA3EB", "#5e35b1"],
+            ["#cfd8dc", "#e57373", "#FF9E4D", "#FFD14D", "#81c784", "#ceeeff", "#33BCFF", "#9575cd"],
+            ["#ffffff", "#ef9a9a", "#FFB766", "#FFEA66", "#a5d6a7", "#ddf4ff", "#4DD6FF", "#d1c4e9"]
+        ];
+
         class SpineColorPickerLight extends Polymer.mixinBehaviors(Polymer.IronA11yKeysBehavior,
             Polymer.Element) {
 
@@ -89,7 +100,7 @@
             static get properties() {
                 return {
                     /**
-                     * The selected value.
+                     * The selected color value.
                      */
                     value: {
                         type: String,
@@ -98,20 +109,13 @@
 
                     /**
                      * The colors set to display as the popup content.
-                     * At the render step each color array is transferred to a vertical column.
+                     * Expected type is a two dimensional array of CSS hex or rgb colors. Each array
+                     * represents one displayed row.
                      */
                     colors: {
-                        type: Object,
-                        value: {
-                            gray: ["#455a64", "#546e7a", "#90a4ae", "#cfd8dc", "#ffffff"],
-                            red: ["#e53935", "#f44336", "#ef5350", "#e57373", "#ef9a9a"],
-                            orange: ["#E65100", "#FF6B1A", "#FF8433", "#FF9E4D", "#FFB766"],
-                            amber: ["#ff8400", "#FF9E1A", "#FFB733", "#FFD14D", "#FFEA66"],
-                            green: ["#1b5e20", "#2e7d32", "#43a047", "#81c784", "#a5d6a7"],
-                            cyan: ["#b4baf2", "#adcef9", "#abd8fc", "#ceeeff", "#ddf4ff"],
-                            blue: ["#0070B8", "#0089d1", "#1AA3EB", "#33BCFF", "#4DD6FF"],
-                            purple: ["#4527a0", "#512da8", "#5e35b1", "#9575cd", "#d1c4e9"]
-                        }
+                        type: Array,
+                        value: DEFAULT_COLORS,
+                        observer: '_colorsObserver'
                     },
 
                     _activeItem: {
@@ -164,12 +168,13 @@
                     : null;
             }
 
-            constructor() {
-                super();
-                Polymer.RenderStatus.beforeNextRender(this, function () {
-                    this._computePopupProperties();
-                    this._getInitiallyActiveItem();
-                }, null);
+            _colorsObserver(colors) {
+                if (colors) {
+                    Polymer.RenderStatus.beforeNextRender(this, function () {
+                        this._computePopupProperties();
+                        this._getInitiallyActiveItem();
+                    }, null);
+                }
             }
 
             _handlePopupOpened() {
@@ -177,7 +182,9 @@
             }
 
             _handlePopupClosed() {
-                this._updateActiveItem(this._activeItem.index);
+                if (this._activeItem) {
+                    this._updateActiveItem(this._activeItem.index);
+                }
             }
 
             _handleMouseClick(event) {
@@ -197,9 +204,7 @@
             }
 
             _handleMouseNavigation(event) {
-                if (typeof event.target.index === 'number') {
-                    this._updateActiveItem(event.target.index);
-                }
+                this._updateActiveItem(event.target.index);
             }
 
             _handleMouseLeave() {
@@ -214,27 +219,17 @@
                 this._updateActiveItem(nextIndex);
             }
 
-            _colorValues() {
-                const values = [];
-                const keys = Object.keys(this.colors);
-                for (let i = 0; i < this.colors[keys[0]].length; i++) {
-                    for (let j = 0; j < keys.length; j++) {
-                        values.push(this.colors[keys[j]][i]);
-                    }
-                }
-                return values;
-            }
-
             _computePopupProperties() {
                 const itemSize = this._getItemSize();
 
                 if (itemSize) {
-                    const actualWidth = itemSize.width + itemSize.spaceBetween;
+                    const actualSize = itemSize.width + itemSize.spaceBetween;
+                    const rows = this.colors.length;
+                    const columns = this.colors[0].length;
 
-                    const colorKeys = Object.keys(this.colors);
-                    const width = (colorKeys.length * actualWidth) -
+                    const width = (columns * actualSize) -
                         itemSize.spaceBetween + (itemSize.parentPadding * 2);
-                    const height = (this.colors[colorKeys[0]].length * actualWidth) -
+                    const height = (rows * actualSize) -
                         itemSize.spaceBetween + (itemSize.parentPadding * 2);
 
                     this._width = width + "px";
@@ -259,19 +254,15 @@
             }
 
             _handleItemSelection() {
-                if (typeof this._navigationIndex === 'number' &&
-                    this._activeNode.bgColor !== this.value) {
-
+                if (typeof this._navigationIndex === 'number') {
                     const target = this._activeNode;
                     const color = target.bgColor;
 
-                    if (color && color !== this.value) {
+                    if (color !== this.value) {
                         this.value = color;
-
                         if (this._activeItem) {
                             this._activeItem.selected = false;
                         }
-
                         target.selected = true;
                         this._activeItem = target;
                     }
@@ -303,7 +294,7 @@
             }
 
             _getIndexChangeByKey(combo) {
-                const rowStep = Object.keys(this.colors).length;
+                const rowStep = this.colors[0].length;
                 const max = this._dropdownItems.length - 1;
                 const rowMax = rowStep - 1;
 
@@ -332,6 +323,10 @@
                     case 'end+ctrl':
                         return max;
                 }
+            }
+
+            _getLinearIndex(row, rowIndex, columnIndex) {
+                return row.length * rowIndex + columnIndex;
             }
         }
 
