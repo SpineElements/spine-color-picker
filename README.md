@@ -7,7 +7,7 @@
     <spine-color-picker value="{{selectedColor}}"></spine-color-picker>
  ```
 
- ###Styling
+ ### Styling
 
  See `SpineColorPickerLight` for a full list of custom properties used to style this element.
 
