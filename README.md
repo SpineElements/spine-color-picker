@@ -1,5 +1,5 @@
 # \<spine-color-picker\>
- An element to hold the color set and to provide selection between them.
+ An element to hold the color set and provide selection between them.
  Behaves as a simple icon button with a drop down content.
 
  Example:
