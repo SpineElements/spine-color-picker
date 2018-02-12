@@ -23,7 +23,8 @@
     "paper-menu-button": "^2.0.0",
     "paper-styles": "^2.0.0",
     "paper-icon-button": "^2.1.0",
-    "iron-icons": "^2.0.1"
+    "iron-icons": "^2.0.1",
+    "spine-contraster": "https://github.com/SpineElements/spine-contraster.git#initial-implementation"
   },
   "devDependencies": {
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
