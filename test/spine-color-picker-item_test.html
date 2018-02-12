@@ -31,10 +31,6 @@
             expect(element.constructor.is).to.eql('spine-color-picker-item');
         });
 
-        test('should reflect `bgColor` property to the component styles', () => {
-            expect(element.style.background).to.eql(element.bgColor);
-        });
-
         test('should dispatch a proper event upon `selected` property change', () => {
             const spy = sinon.spy();
             element.addEventListener('spine-color-picker-select', spy);
@@ -48,6 +44,16 @@
             element.selected = true;
             const icon = element.shadowRoot.querySelector('iron-icon');
             expect(window.getComputedStyle(icon).visibility).to.eql('visible');
+        });
+
+        test('should reflect `lightTheme` property to the attribute', () => {
+            element.bgColor = '#ffffff';
+            expect(element.hasAttribute('light-theme')).to.eql(true);
+        });
+
+        test('should reflect `darkTheme` property to the attribute', () => {
+            element.bgColor = '#000000';
+            expect(element.hasAttribute('dark-theme')).to.eql(true);
         });
     });
 </script>
