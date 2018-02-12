@@ -1,6 +1,6 @@
 <link rel="import" href="../polymer/polymer-element.html">
-<link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../iron-icons/editor-icons.html">
+<link rel="import" href="../spine-icon-button/spine-icon-button.html">
 
 <link rel="import" href="./spine-color-picker-light.html">
 
@@ -28,17 +28,49 @@
         <style>
             :host {
                 display: inline-block;
+                flex: 0;
+                text-align: center;
             }
 
-            paper-icon-button {
+            spine-icon-button {
+                height: 32px;
+                width: 32px;
+                padding: 4px;
+
                 @apply --spine-color-picker-trigger;
+            }
+
+            #preview {
+                width: calc(100% - 8px);
+                margin: 4px;
+                height: 4px;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                background: transparent;
+            }
+
+            #preview[white] {
+                height: 2px;
+                width: calc(100% - 10px);
+                border: 1px solid rgba(0, 0, 0, .1);
+            }
+
+            #button-suffix {
+                position: absolute;
+                left: calc(100% - 3px);
+                top: 0;
+                color: var(--light-theme-secondary-color);
+                height: 20px;
             }
         </style>
 
         <spine-color-picker-light value="{{value}}" colors="[[colors]]">
-            <paper-icon-button disabled="[[disabled]]"
+            <spine-icon-button disabled="[[disabled]]"
                                icon="editor:format-color-fill">
-            </paper-icon-button>
+                <iron-icon id="button-suffix" icon="icons:arrow-drop-down"></iron-icon>
+                <div id="preview" style$="background: [[value]]" white$="[[_isWhite]]"></div>
+            </spine-icon-button>
         </spine-color-picker-light>
     </template>
 
@@ -70,8 +102,26 @@
                      * as a default value. Expected type is a two dimensional array of CSS hex or
                      * rgb colors. Each array represents one displayed row.
                      */
-                    colors: Object
+                    colors: Object,
+
+                    _isWhite: {
+                        type: Boolean,
+                        computed: '_isWhiteColor(value)'
+                    }
                 };
+            }
+
+            /**
+             * Indicates if provided color is white.
+             *
+             * @param color Color value
+             * @return {boolean} True if provided color is white
+             * @protected
+             */
+            _isWhiteColor(color) {
+                return color &&
+                    (color === '#fff' || color === '#ffffff' || color === 'rgb(255, 255, 255)');
+
             }
         }
 
