@@ -6,7 +6,7 @@
 
 <!--
  A lighter version of `spine-color-picker`. The main purpose of this element is to provide a
- customizable trigger element. To use this element you must provide a dropdown trigger as a slot:
+ customizable trigger element. To use this element you must specify a dropdown trigger as a slot:
 
  ```
   <spine-color-picker-light>
@@ -83,7 +83,7 @@
                             <spine-color-picker-item class="item"
                                                      style$="background: [[color]]"
                                                      bg-color="[[color]]"
-                                                     index="[[_getLinearIndex(row, rowIndex, columnIndex)]]"
+                                                     index="[[_computeLinearIndex(row, rowIndex, columnIndex)]]"
                                                      on-mouseover="_handleMouseNavigation"
                                                      on-click="_handleMouseClick">
                             </spine-color-picker-item>
@@ -112,7 +112,7 @@
 
             static get properties() {
                 /**
-                 * Fired when color item is selected.
+                 * Fired when a color item is selected.
                  *
                  * @event spine-color-picker-select
                  * @param {string} value Selected color
@@ -216,7 +216,6 @@
             _handleEnterKeyDown() {
                 if (typeof this._navigationIndex !== 'number') {
                     this._updateActiveItem(this._activeItem.index);
-
                 } else {
                     this._handleItemSelection();
                     this.$.menu.close();
@@ -259,17 +258,17 @@
 
             _getItemSize() {
                 const item = this.shadowRoot.querySelector('.item');
-                const parentComputedStyles = window.getComputedStyle(item.parentElement);
-                const leftPadding = Number.parseInt(parentComputedStyles['padding-left']);
-                const rightPadding = Number.parseInt(parentComputedStyles['padding-right']);
-                const topPadding = Number.parseInt(parentComputedStyles['padding-top']);
-                const bottomPadding = Number.parseInt(parentComputedStyles['padding-bottom']);
-
                 if (item) {
-                    const computed = window.getComputedStyle(item);
+                    const parentComputedStyles = window.getComputedStyle(item.parentElement);
+                    const leftPadding = Number.parseInt(parentComputedStyles['padding-left']);
+                    const rightPadding = Number.parseInt(parentComputedStyles['padding-right']);
+                    const topPadding = Number.parseInt(parentComputedStyles['padding-top']);
+                    const bottomPadding = Number.parseInt(parentComputedStyles['padding-bottom']);
+                    const itemComputedStyles = window.getComputedStyle(item);
+
                     return {
-                        width: Number.parseInt(computed.width),
-                        spaceBetween: Number.parseInt(computed['margin-right']),
+                        width: Number.parseInt(itemComputedStyles.width),
+                        spaceBetween: Number.parseInt(itemComputedStyles['margin-right']),
                         parentPadding: {
                             horizontal: leftPadding + rightPadding,
                             vertical: topPadding + bottomPadding
@@ -352,7 +351,7 @@
                 }
             }
 
-            _getLinearIndex(row, rowIndex, columnIndex) {
+            _computeLinearIndex(row, rowIndex, columnIndex) {
                 return row.length * rowIndex + columnIndex;
             }
         }

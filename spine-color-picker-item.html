@@ -69,6 +69,12 @@
             }
 
             static get properties() {
+                /**
+                 * Fired when the item is selected.
+                 *
+                 * @event spine-color-picker-select
+                 * @param {string} value Selected color
+                 */
                 return {
                     /**
                      * If true, `iron-icon` is shown.
@@ -79,34 +85,24 @@
                     },
 
                     /**
-                     * If true, the `spine-color-picker-select` event is fired.
+                     * Indicates whether the item is currently selected or not.
                      */
                     selected: {
                         type: Boolean,
                         reflectToAttribute: true,
                         observer: '__selectedObserver'
-                    },
-
-                    reflectToStyle: {
-                        type: Boolean,
-                        value: true,
-                        readOnly: true
                     }
                 }
             }
 
             __selectedObserver(value) {
                 if (value) {
-                    this.dispatchEvent(this.__createItemSelectedEvent());
+                    this.dispatchEvent(new CustomEvent('spine-color-picker-select', {
+                        detail: {value: this.bgColor},
+                        bubbles: true,
+                        composed: true
+                    }));
                 }
-            }
-
-            __createItemSelectedEvent() {
-                return new CustomEvent('spine-color-picker-select', {
-                    detail: {value: this.bgColor},
-                    bubbles: true,
-                    composed: true
-                });
             }
 
         }
